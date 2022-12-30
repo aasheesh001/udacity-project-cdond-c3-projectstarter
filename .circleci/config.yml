@@ -247,6 +247,11 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - run:
+          when: on_fail
+          name: Delete S3 files
+          command: |
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment
       - revert-migrations    
                     
@@ -319,8 +324,13 @@ jobs:
             else
               return 1
             fi
-      # - destroy-environment
-      # - revert-migrations
+      - run: 
+          when: on_fail
+          name: Delete S3 files
+          command: |
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment
+      - revert-migrations
 
   cloudfront-update:
     docker:
@@ -338,7 +348,7 @@ jobs:
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
               --stack-name InitialStack \
-              --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
       # Here's where you will add some code to rollback on failure  
 
@@ -368,7 +378,6 @@ jobs:
               aws cloudformation delete-stack --stack-name udapeople-frontend-${OldWorkflowID}
             fi
             
-#
 workflows:
   default:
     jobs:
@@ -384,6 +393,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
