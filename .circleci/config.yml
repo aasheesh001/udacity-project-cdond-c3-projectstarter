@@ -3,13 +3,15 @@ version: 2.1
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    # parameters:
-    #   # Add parameter here   
+    parameters:
+      workflow_id:
+        type: string 
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
+            echo "Destroying environment: << parameters.workflow_id >> "
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -108,7 +110,7 @@ jobs:
             cd frontend
             npm install
             npm audit fix --audit-level=critical --force
-            npm audit fix --force
+            npm audit --audit-level=critical
 
   scan-backend:
     docker:
@@ -123,7 +125,7 @@ jobs:
             cd backend
             npm install
             npm audit fix --audit-level=critical --force
-            npm audit fix --force
+            npm audit --audit-level=critical
 
   deploy-infrastructure:
     docker:
@@ -197,8 +199,6 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical --force
-            npm audit fix --force
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to memstash
