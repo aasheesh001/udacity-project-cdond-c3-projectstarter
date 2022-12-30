@@ -1,9 +1,9 @@
 ---
 - name: "Copy tar file"
   unarchive:
-    src: ../../../artifact.tar.gz
+    src: artifact.tar.gz
     dest: /usr/local/bin
-    remote_src: yes
+    remote_src: no
 
 - name: Executing node
   shell: |

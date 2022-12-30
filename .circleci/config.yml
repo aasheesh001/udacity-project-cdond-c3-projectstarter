@@ -225,7 +225,6 @@ jobs:
             yum install -y tar gzip
             yum install -y python3
             python3 -m pip install --user ansible
-            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
             yum install nodejs
       - attach_workspace:
           at: ~/
