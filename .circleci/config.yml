@@ -226,7 +226,7 @@ jobs:
       # - attach_workspace:
       #     at: ~/
       - restore_cache:
-          keys: [frontend-scan]
+          keys: [frontend-build]
       - run:
           name: Get backend url
           command: |
@@ -296,7 +296,7 @@ jobs:
             \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople" \
-              --output text >> .circleci/ansible/inventory.txt)
+              --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
       - run:
