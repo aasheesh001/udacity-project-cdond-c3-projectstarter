@@ -302,7 +302,7 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            if curl "${API_URL}/api/status" | grep "ok"
+            if curl "https://google.com" | grep "moved"
             then
               return 0
             else
