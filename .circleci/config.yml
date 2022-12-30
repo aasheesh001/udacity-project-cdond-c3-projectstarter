@@ -226,7 +226,7 @@ jobs:
       # - attach_workspace:
       #     at: ~/
       - restore_cache:
-          keys: [frontend-build]
+          keys: [frontend-scan]
       - run:
           name: Get backend url
           command: |
