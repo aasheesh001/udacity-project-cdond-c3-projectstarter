@@ -111,6 +111,9 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+      - save_cache:
+          paths: [frontend/scan]
+          key: frontend-scan
 
   scan-backend:
     docker:
@@ -126,6 +129,9 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+      - save_cache:
+          paths: [backend/scan]
+          key: backend-scan
 
   deploy-infrastructure:
     docker:
@@ -193,7 +199,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-scan]
       - run:
           name: Run migrations
           command: |
