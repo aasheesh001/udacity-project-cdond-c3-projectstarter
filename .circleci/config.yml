@@ -237,6 +237,7 @@ jobs:
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
+            aws s3 ls
       - run:
           name: Deploy frontend objects
           command: |
