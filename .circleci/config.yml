@@ -144,7 +144,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
+              --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
       - run:
@@ -152,7 +152,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
+              --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
       - run:
@@ -161,7 +161,7 @@ jobs:
             aws ec2 describe-instances \
             \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople" \
+              --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
@@ -175,7 +175,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["43:f7:4d:ce:fa:a9:cc:4e:39:0f:c0:9a:bc:46:5a:72"]
+          fingerprints: ["fa:1c:16:66:7d:ec:8a:3c:5a:0a:3b:27:21:68:43:a5"]
       - attach_workspace:
           at: ~/
       - run:
@@ -233,7 +233,7 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances \
             \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople" \
+              --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
@@ -261,7 +261,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["43:f7:4d:ce:fa:a9:cc:4e:39:0f:c0:9a:bc:46:5a:72"]
+          fingerprints: ["fa:1c:16:66:7d:ec:8a:3c:5a:0a:3b:27:21:68:43:a5"]
       - attach_workspace:
           at: ~/
       - run:
@@ -300,7 +300,7 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances \
             \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople" \
+              --filters "Name=tag:project,Values=udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
             export API_URL="http://${BACKEND_IP}"
             echo "${API_URL}"
@@ -358,7 +358,7 @@ jobs:
               --template-file .circleci/files/cloudfront.yml \
               --stack-name InitialStack \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=udapeople
+              --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7}
       - persist_to_workspace:
           root: ~/
           paths:
