@@ -24,6 +24,11 @@
     production: yes
     state: present
 
+- name: "install psql"
+  become: yes
+  npm:
+    name: postgressql-client
+    state: latest
 # - name: Install Prometheus
 #   become: yes
 #   shell: |
